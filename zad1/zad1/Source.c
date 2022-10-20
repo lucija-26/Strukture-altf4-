@@ -70,7 +70,6 @@ int readStudentsFromFile(char* filename, Student *studenti)
 {
 	FILE* fp = NULL;
 	int i = 0;
-	char buffer[MAX_LINE] = { 0 };
 
 	fp = fopen(filename, "r");
 	if (NULL == fp)
