@@ -1,0 +1,5 @@
+﻿  Source.c
+C:\Users\student\source\repos\Zad3\Zad3\Source.c(161,14): warning C4047: 'return': 'Position' differs in levels of indirection from 'int'
+C:\Users\student\source\repos\Zad3\Zad3\Source.c(200,15): warning C4098: 'unosDatoteka': 'void' function returning a value
+C:\Users\student\source\repos\Zad3\Zad3\Source.c(220,15): warning C4098: 'ispisDatoteka': 'void' function returning a value
+  Zad3.vcxproj -> C:\Users\student\source\repos\Zad3\Debug\Zad3.exe
