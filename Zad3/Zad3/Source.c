@@ -18,12 +18,13 @@ typedef struct _osoba {
 
 Position unosOsobe(char*, char*, int);
 Position pronadiPoPrezimenu(Position, char*);
+Position nadjiPret(char*, Position);
 void unosP(Position, Position);
 void unosK(Position, Position);
 void ispis(Position);
 void izbrisi(int n, Position);
 void unosIza(int n, Position, Position);
-void unosIspred(int n, Position, Position);
+int unosIspred(char*, Position, Position);
 void unosDatoteka(char*, Position);
 void ispisDatoteka(char*);
 
@@ -35,7 +36,7 @@ int main() {
 	char prezime[MAX_LINE] = { 0 };
 	char temp[MAX_LINE] = { 0 };
 	char filename[MAX_LINE] = { 0 };
-	int god = 0, poz, br, izbor;
+	int god = 0, poz, br, izbor, status;
 	head.next = NULL;
 	printf("Koliko ljudi zelite unijeti? ");
 	scanf("%d", &br);
@@ -67,8 +68,8 @@ int main() {
 	}
 	ispis(&head);
 
-	printf("\nUnesite broj prije kojeg zelite upisati element: ");
-	scanf("%d", &poz);
+	printf("\nUnesite prezime prije kojeg zelite upisati element: ");
+	scanf(" %s", temp);
 	printf("Ime: ");
 	scanf(" %s", ime);
 	printf("Prezime: ");
@@ -76,7 +77,9 @@ int main() {
 	printf("Godina: ");
 	scanf("%d", &god);
 	P = unosOsobe(ime, prezime, god);
-	unosIspred(poz, &head, P);
+	status = unosIspred(temp, &head, P);
+	if (status != EXIT_SUCCESS)
+		return;
 	ispis(&head);
 
 	printf("\nUnesite broj iza kojeg zelite upisati element: ");
@@ -161,6 +164,18 @@ Position pronadiPoPrezimenu(Position head, char* prez) {
 	return ERROR;
 }
 
+Position nadjiPret(char* prezime, Position head) {
+	Position p = NULL, q = NULL;
+	p = head->next;
+	while (p != NULL && strcmp(p->prezime, prezime) != 0) {
+    q = p;
+		p = p->next;
+	}
+	if (p == NULL)
+		return NULL;
+	return q;
+}
+
 void izbrisi(int n, Position head) {
 	Position temp1 = head;
 	int i;
@@ -182,14 +197,12 @@ void unosIza(int n, Position head, Position p) {
 	temp1->next = p;
 }
 
-void unosIspred(int n, Position head, Position p) {
-	Position temp1 = head;
-	int i;
-	for (i = 0; i < n - 1; i++) {
-		temp1 = temp1->next;
-	}
-	p->next = temp1->next;
-	temp1->next = p;
+int unosIspred(char* prezime, Position head, Position p) {
+  Position prev = NULL;
+	prev = nadjiPret(prezime, head);
+	p->next = prev->next;
+  prev->next = p;
+	return EXIT_SUCCESS;
 }
 
 void unosDatoteka(char* filename, Position head) {
@@ -201,7 +214,7 @@ void unosDatoteka(char* filename, Position head) {
 	}
 	head = head->next;
 	while (head != NULL) {
-		
+
 		fprintf(fp, "%s %s %d\n", head->ime, head->prezime, head->godina);
 		head = head->next;
 	}
