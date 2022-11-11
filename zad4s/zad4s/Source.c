@@ -18,6 +18,7 @@ int sortInput(Position, Position);
 int printPolinom(Position);
 int sumOfPolinoms(Position, Position, Position);
 int productOfPolinoms(Position, Position, Position);
+int freeMemory(Position, Position);
 Position createPolinom(int, int);
 
 int insertAfter(Position, Position);
@@ -26,7 +27,7 @@ int main(void) {
   Clan head = {.c = 0, .e = 0, .next = NULL};
   Clan head1 = { .c = 0, .e = 0, .next = NULL };
   Clan head2 = { .c = 0, .e = 0, .next = NULL };
-  Position P = NULL, Q = NULL;
+  Position P = NULL, Q = NULL, tempp = NULL;
   Clan Sum = {.c = 0, .e = 0, .next = NULL};
   Clan Product = {.c = 0, .e = 0, .next = NULL};
   int e = 0, c = 0;
@@ -44,6 +45,11 @@ int main(void) {
   printf("\n");
   printf("Produkt: ");
   printPolinom(&Product);
+
+  freeMemory(&head1, tempp);
+  freeMemory(&head2, tempp);
+  freeMemory(&Sum, tempp);
+  freeMemory(&Product, tempp);
 
   return 0;
 }
@@ -182,6 +188,15 @@ int sumOfPolinoms(Position pol1, Position pol2, Position sum) {
       }
     }
   }
+  return 0;
+}
+
+int freeMemory(Position head, Position tempp) {
+  while (head->next != NULL) {
+		tempp = head->next;
+		head->next = head->next->next;
+		free(tempp);
+	}
   return 0;
 }
 
