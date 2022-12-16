@@ -23,10 +23,10 @@ typedef struct stack {
 
 int makeDir(Position, char*);
 int Push(PositionStack, Position);
-int changeDir(Position, char*, PositionStack);
-int changeToParentDir(PositionStack);
 int printDir(Position);
 int terminal(PositionStack, Position);
+Position changeDir(Position, char*, PositionStack);
+Position changeToParentDir(PositionStack);
 Position Pop(PositionStack);
 Position newDir();
 Position delete(Position);
@@ -55,7 +55,7 @@ Position newDir() {
     Position new = NULL;
     new = (Position)malloc(sizeof(Dir));
     if (!new) {
-        printf("Neuspjesna alokacija memorije.\n");
+        printf("Memory allocation unsuccessful.\n");
         return NULL;
     }
     new->child = NULL;
@@ -126,26 +126,25 @@ Position Pop(PositionStack stack) {
     return dir;
 }
 
-int changeDir(Position current, char* name, PositionStack stack) {
+Position changeDir(Position current, char* name, PositionStack stack) {
     Position p = current->child;
     if (!current->child) {
         printf("\nThe system cannot find the path specified.\n");
-        return EXIT_FAILURE;
+        return NULL;
     }
     while (p != NULL && strcmp(p->name, name) != 0) {
         p = p->sibling;
     }
     if (!p) {
         printf("\nThe system cannot find the path specified.\n");
-        return -1;
+        return NULL;
     }
     Push(stack, p);
-    return EXIT_SUCCESS;
+    return p;
 }
 
-int changeToParentDir(PositionStack stack) {
-    Pop(stack);
-    return EXIT_SUCCESS;
+Position changeToParentDir(PositionStack stack) {
+    return Pop(stack);
 }
 
 int printDir(Position current) {
@@ -179,10 +178,10 @@ int terminal(PositionStack stack, Position current) {
             makeDir(current, name);
         }
         else if (strcmp(cmd, "cd..") == 0) {
-            changeToParentDir(stack);
+            current = changeToParentDir(stack);
         }
         else if (strcmp(cmd, "cd") == 0) {
-            changeDir(current, name, stack);
+            current = changeDir(current, name, stack);
         }
         else if (strcmp(cmd, "dir") == 0) {
             printDir(current);
