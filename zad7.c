@@ -26,7 +26,7 @@ int Push(PositionStack, Position);
 int printDir(Position);
 int terminal(PositionStack, Position);
 Position changeDir(Position, char*, PositionStack);
-Position changeToParentDir(PositionStack);
+Position changeToParentDir(Position, PositionStack);
 Position Pop(PositionStack);
 Position newDir();
 Position delete(Position);
@@ -130,21 +130,24 @@ Position changeDir(Position current, char* name, PositionStack stack) {
     Position p = current->child;
     if (!current->child) {
         printf("\nThe system cannot find the path specified.\n");
-        return NULL;
+        return current;
     }
     while (p != NULL && strcmp(p->name, name) != 0) {
         p = p->sibling;
     }
     if (!p) {
         printf("\nThe system cannot find the path specified.\n");
-        return NULL;
+        return current;
     }
     Push(stack, p);
     return p;
 }
 
-Position changeToParentDir(PositionStack stack) {
-    return Pop(stack);
+Position changeToParentDir(Position current, PositionStack stack) {
+    Pop(stack);
+    current = Pop(stack);
+    Push(stack, current);
+    return current;
 }
 
 int printDir(Position current) {
@@ -178,7 +181,7 @@ int terminal(PositionStack stack, Position current) {
             makeDir(current, name);
         }
         else if (strcmp(cmd, "cd..") == 0) {
-            current = changeToParentDir(stack);
+            current = changeToParentDir(current, stack);
         }
         else if (strcmp(cmd, "cd") == 0) {
             current = changeDir(current, name, stack);
