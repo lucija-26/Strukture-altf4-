@@ -22,7 +22,7 @@ int levelOrder(Position root);
 int inOrder(Position p);
 int postOrder(Position p);
 int preOrder(Position p);
-Position delete (Position p, int br);
+Position delete(Position p, int br);
 Position findEl(Position p, int br);
 Position findMax(Position p);
 Position findMin(Position p);
@@ -80,12 +80,13 @@ int main() {
       printf("Unesite element koji trazite u stablu:\n");
       scanf("%d", &el);
       p = findEl(root, el);
-      printf("Element: %d\n", p->el);
+      if (p)
+        printf("Element: %d\n", p->el);
       break;
     case 7:
       printf("Unesite element koji zelite izbrisati:\n");
       scanf("%d", &el);
-      root = delete (root, el);
+      root = delete(root, el);
     case 8:
       break;
     default:
@@ -139,23 +140,23 @@ int postOrder(Position p) {
   return 0;
 }
 
-Position delete (Position p, int br) {
+Position delete(Position p, int br) {
   if (p == NULL)
     return NULL;
 
   if (p->el < br)
-    p->right = delete (p->right, br);
+    p->right = delete(p->right, br);
   else if (p->el > br)
-    p->left = delete (p->left, br);
+    p->left = delete(p->left, br);
   else {
     if (p->left) {
       Position temp = findMax(p->left);
       p->el = temp->el;
-      p->left = delete (p->left, temp->el);
+      p->left = delete(p->left, temp->el);
     } else if (p->right) {
       Position temp = findMin(p->right);
       p->el = temp->el;
-      p->right = delete (p->right, temp->el);
+      p->right = delete(p->right, temp->el);
     } else {
       free(p);
       return NULL;
